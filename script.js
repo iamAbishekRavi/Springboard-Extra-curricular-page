@@ -1,69 +1,32 @@
-const tagsEl = document.getElementById('tags')
-const textarea = document.getElementById('textarea')
 
-textarea.focus()
+let slideIndex = 0;
+showSlides();
 
-textarea.addEventListener('keyup', (e) => {
-    createTags(e.target.value)
-
-    if(e.key === 'Enter') {
-        setTimeout(() => {
-            e.target.value = ''
-        }, 10)
-
-        randomSelect()
-    }
-})
-
-function createTags(input) {
-    const tags = input.split(',').filter(tag => tag.trim() !== '').map(tag => tag.trim())
-    
-    tagsEl.innerHTML = ''
-
-    tags.forEach(tag => {
-        const tagEl = document.createElement('span')
-        tagEl.classList.add('tag')
-        tagEl.innerText = tag
-        tagsEl.appendChild(tagEl)
-    })
+function showSlides() {
+  let i;
+  const slides = document.getElementsByClassName("slider-item");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.transform = "translateX(-" + slideIndex * 100 + "%)";
+  }
+  slideIndex++;
+  if (slideIndex > slides.length - 1) {
+    slideIndex = 0;
+  }
+  setTimeout(showSlides, 3000); // Change slide every 3 seconds
 }
 
-function randomSelect() {
-    const times = 30
+// Animated Cards
 
-    const interval = setInterval(() => {
-        const randomTag = pickRandomTag()
-	
-	if (randomTag !== undefined) {
-        highlightTag(randomTag)
+const activityCards = document.getElementsByClassName("activity-card");
 
-        setTimeout(() => {
-            unHighlightTag(randomTag)
-        }, 100)
-	}
-    }, 100);
+for (let i = 0; i < activityCards.length; i++) {
+  activityCards[i].addEventListener("mouseover", function() {
+    this.style.transform = "scale(1.05)";
+    this.style.boxShadow = "0px 0px 10px rgba(0, 0, 0, 0.2)";
+  });
 
-    setTimeout(() => {
-        clearInterval(interval)
-
-        setTimeout(() => {
-            const randomTag = pickRandomTag()
-
-            highlightTag(randomTag)
-        }, 100)
-
-    }, times * 100)
-}
-
-function pickRandomTag() {
-    const tags = document.querySelectorAll('.tag')
-    return tags[Math.floor(Math.random() * tags.length)]
-}
-
-function highlightTag(tag) {
-    tag.classList.add('highlight')
-}
-
-function unHighlightTag(tag) {
-    tag.classList.remove('highlight')
+  activityCards[i].addEventListener("mouseout", function() {
+    this.style.transform = "scale(1)";
+    this.style.boxShadow = "0px 0px 5px rgba(0, 0, 0, 0.1)";
+  });
 }
